@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A+ Core 2 (220-1202) — Lab 1: Windows OS &amp; Command Line</title>
+<style>
+  :root{--navy:#0b1f33;--navy2:#123a5a;--blue:#1769aa;--soft:#eaf4fb;--g25:#fbfcfd;--g50:#f4f7f9;--g100:#e7edf2;--g200:#d4dde5;--g500:#687786;--g700:#334454;--green:#16784a;--gsoft:#e9f7ef;--orange:#c85b14;--osoft:#fff2e8;--red:#b83a3a;--rsoft:#fdecec}
+  *{box-sizing:border-box} body{margin:0;background:var(--g50);color:var(--navy);font-family:Arial,Helvetica,sans-serif;line-height:1.45}
+  button,input,select{font:inherit} button{cursor:pointer}
+  .wrap{max-width:1100px;margin:14px auto;background:#fff;border:1px solid var(--g200);border-radius:16px;overflow:hidden;box-shadow:0 14px 34px rgba(16,42,67,.13)}
+  header{background:linear-gradient(120deg,var(--navy),var(--navy2));color:#fff;padding:22px 26px}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;opacity:.78;margin-bottom:4px}
+  h1{margin:0;font-size:clamp(22px,3vw,32px);color:#ffb273}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;padding:14px 20px 0;background:var(--g50)}
+  .tab{border:1px solid var(--g200);border-bottom:0;background:#fff;color:var(--navy);padding:10px 16px;border-radius:10px 10px 0 0;font-weight:700}
+  .tab.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+  main{padding:20px;background:var(--g50)}
+  .bar{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+  .bar .prog{flex:1;min-width:180px;height:8px;background:var(--g100);border-radius:9px;overflow:hidden}
+  .bar .prog i{display:block;height:100%;width:0;background:var(--blue);transition:width .25s}
+  .intro{background:var(--soft);border-left:5px solid var(--blue);border-radius:8px;padding:14px 16px;margin-bottom:14px;color:var(--navy)}
+  .card{background:#fff;border:1px solid var(--g200);border-radius:13px;padding:16px;margin-bottom:14px}
+  .card.done{border-color:#9ed4b5;background:#fcfffd}
+  .card h2{margin:0 0 4px;font-size:18px} .tag{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+  .card p{margin:6px 0 10px;color:var(--g700)}
+  .btn{border:0;border-radius:9px;padding:9px 14px;font-weight:700;background:var(--blue);color:#fff}
+  .btn.sec{background:#fff;color:var(--navy);border:1px solid var(--g200)} .btn:disabled{opacity:.5;cursor:default}
+  .term{background:#0c1117;color:#cfe8d4;font-family:Consolas,Menlo,monospace;font-size:13px;border-radius:9px 9px 0 0;padding:12px;height:190px;overflow:auto;white-space:pre-wrap}
+  .term .c{color:#fff} .term .e{color:#ff8f8f} .term .o{color:#9fd4a8}
+  .term-row{display:flex;gap:8px;align-items:center;background:#0c1117;color:#8ad6a0;font-family:Consolas,Menlo,monospace;font-size:13px;padding:8px 12px;border-radius:0 0 9px 9px;border-top:1px solid #243040}
+  .term-row input{flex:1;background:transparent;border:0;outline:0;color:#fff;font-family:inherit;font-size:13px}
+  .task-q{margin:10px 0 8px;background:var(--g25);border:1px solid var(--g200);border-left:4px solid var(--blue);border-radius:8px;padding:10px 12px}
+  .hint{margin-top:8px;background:#fff8df;border:1px solid #eedc9f;color:#685118;padding:8px 11px;border-radius:8px;font-size:13px}
+  .ok{margin-top:8px;color:#155d3c;background:var(--gsoft);border:1px solid #b8e2c9;padding:9px 12px;border-radius:8px;font-size:13px;font-weight:700}
+  .bad{margin-top:8px;color:#8b4218;background:var(--osoft);border:1px solid #f0c8aa;padding:9px 12px;border-radius:8px;font-size:13px}
+  table{width:100%;border-collapse:collapse} td{padding:8px;border-bottom:1px solid var(--g100);vertical-align:middle;font-size:14px}
+  td.m{width:34px;font-weight:800;text-align:center} td.m.y{color:var(--green)} td.m.n{color:var(--red)}
+  select{width:100%;padding:8px;border:1px solid var(--g200);border-radius:8px;background:#fff;color:var(--navy)}
+  select.y{border-color:#9ed4b5;background:var(--gsoft)} select.n{border-color:#e6b7b7;background:var(--rsoft)}
+  ol.ord{list-style:none;margin:0;padding:0;display:grid;gap:7px;counter-reset:s}
+  ol.ord li{display:flex;gap:10px;align-items:center;border:1px solid var(--g200);border-radius:9px;padding:9px 11px;background:var(--g25);counter-increment:s}
+  ol.ord li::before{content:counter(s);font-weight:800;color:var(--blue);width:20px}
+  ol.ord li span{flex:1} ol.ord button{border:1px solid var(--g200);background:#fff;border-radius:7px;padding:4px 9px}
+  .perm{display:inline-grid;grid-template-columns:90px repeat(3,64px);gap:6px;align-items:center;margin:6px 0}
+  .perm b{font-size:12px;text-align:center;color:var(--g500)} .perm label{font-weight:700} .perm input{width:20px;height:20px;justify-self:center}
+  .num{font-family:Consolas,monospace;font-size:20px;font-weight:800;margin-left:14px}
+  .opts{display:grid;gap:8px} .opt{text-align:left;border:1px solid var(--g200);background:#fff;color:var(--navy);border-radius:9px;padding:10px 13px;font-weight:700}
+  .opt.y{background:var(--gsoft);border-color:#9ed4b5;color:#155d3c} .opt.n{background:var(--rsoft);border-color:#e6b7b7;color:#8d2c2c}
+  .foot{display:flex;justify-content:flex-end;gap:10px;margin-top:8px}
+  .report{background:#fff;border:1px solid var(--g200);border-radius:13px;padding:18px;margin-bottom:14px}
+  .report h2{margin:0 0 6px} .big{font-size:42px;font-weight:800;color:var(--blue)}
+  details{border:1px solid var(--g200);border-radius:9px;margin-top:8px;background:#fff} summary{cursor:pointer;padding:10px 12px;font-weight:700;background:var(--g25)}
+  details ul,details ol{margin:8px 0;padding:0 14px 8px 32px;font-size:13px;color:var(--g700)} code{background:var(--g100);padding:1px 5px;border-radius:5px}
+  .hidden{display:none} .tabs{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><div class="eyebrow">CompTIA A+ Core 2 · 220-1202 · Performance-Based Labs</div><h1>Lab 1 — Windows OS &amp; Command Line</h1></header>
+  <div class="tabs" id="tabs"></div>
+  <main>
+    <div class="bar"><strong id="completed">0 / 0 tasks complete</strong><div class="prog"><i id="pbar"></i></div><button class="btn sec" id="resetLab">Reset Lab</button><button class="btn" id="submitLab">Submit Lab</button></div>
+    <div class="intro" id="intro"></div>
+    <div id="tasks"></div>
+    <div id="report"></div>
+  </main>
+</div>
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const esc=v=>String(v==null?"":v).replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
+const shuf=a=>{const b=a.slice();for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b};
+
+const labs=[
+
+{name:"Lab 1 · Windows OS & Command Line",
+ intro:"Scenario: You are the technician on duty at Northstar Creative Solutions. Complete each performance-based task in the style of the 220-1202 exam: type real commands, match tools to jobs, place steps in order, and answer scenario questions. Topics: common operating systems, partitioning, file systems, troubleshooting tools, Windows settings, OS installation, networking, and command prompt commands.",
+ tasks:[
+ {type:"term",title:"Command Prompt Troubleshooting",ps:"C:\\Users\\tech>",ci:true,prompt:"Type the correct Windows command for each objective. Commands run in an elevated Command Prompt.",items:[
+  ["A user reaches sites by IP but name lookups return stale results after a DNS change. Clear the local DNS resolver cache.","^ipconfig\\s+/flushdns$","Windows IP Configuration\n\nSuccessfully flushed the DNS Resolver Cache.","ipconfig with a switch that flushes DNS","ipconfig /flushdns"],
+  ["Display the full IP configuration for all adapters, including DNS servers and MAC addresses.","^ipconfig\\s+/all$","Ethernet adapter Ethernet:\n   Physical Address. . . : 00-1A-2B-3C-4D-5E\n   IPv4 Address. . . . . : 192.168.20.45\n   DNS Servers . . . . . : 192.168.20.10","Same command as before, different switch","ipconfig /all"],
+  ["Windows behaves oddly after a failed update. Scan and repair protected system files.","^sfc\\s+/scannow$","Windows Resource Protection found corrupt files and successfully repaired them.","System File Checker","sfc /scannow"],
+  ["Check drive C: and fix file system errors.","^chkdsk\\s+c:\\s+/[fr]$","Cannot lock current drive. Chkdsk can run at next restart. Schedule? (Y/N)","chkdsk, drive letter, then a fix switch","chkdsk C: /f"],
+  ["Force Group Policy to refresh immediately.","^gpupdate\\s+/force$","Updating policy...\nComputer Policy update has completed successfully.\nUser Policy update has completed successfully.","gp + update","gpupdate /force"],
+  ["Show each router hop between this PC and 8.8.8.8.","^tracert\\s+8\\.8\\.8\\.8$","  1    <1 ms  192.168.20.1\n  2     8 ms  10.10.0.1\n  3    14 ms  8.8.8.8\nTrace complete.","Windows uses tracert, not traceroute","tracert 8.8.8.8"],
+  ["Copy C:\\Data to D:\\Backup including all subfolders (even empty ones) using the robust copy utility.","^robocopy\\s+c:\\\\data\\s+d:\\\\backup\\s+/e$","Total Copied: 214 files. Failed: 0.","Source, then destination, then /e","robocopy C:\\Data D:\\Backup /e"],
+  ["Forcefully end the unresponsive process with PID 4312.","^taskkill\\s+(/pid\\s+4312\\s+/f|/f\\s+/pid\\s+4312)$","SUCCESS: The process with PID 4312 has been terminated.","taskkill with /pid and /f","taskkill /pid 4312 /f"]
+ ]},
+ {type:"match",title:"Match the Windows Tool to the Job",prompt:"Select the best built-in Windows tool for each situation.",rows:[
+  ["Review application crash and error logs","Event Viewer"],["Find which process is using the most memory right now","Task Manager"],["Shrink a volume or assign a drive letter","Disk Management"],["Roll back a device driver","Device Manager"],["Perform a clean boot by disabling non-Microsoft services","System Configuration (msconfig)"],["View a stability timeline of app and Windows failures","Reliability Monitor"],["Run a script every night at 2 AM","Task Scheduler"]],extra:["Registry Editor","Performance Monitor"]},
+ {type:"match",title:"Match the Windows Setting to the Task",prompt:"Select where each change is made in Windows settings.",rows:[
+  ["Remove an installed desktop application","Apps & features / Programs and Features"],["Change sleep and lid-close behavior","Power Options"],["Allow an app through the firewall","Windows Defender Firewall"],["Set a PIN or fingerprint sign-in","Accounts > Sign-in options"],["Change the date/time region format","Time & Language"]],extra:["System Properties","Network Connections"]},
+ {type:"match",title:"Choose the File System",prompt:"Select the best file system for each requirement.",rows:[
+  ["Windows system drive needing permissions, encryption, and files over 4 GB","NTFS"],["USB drive shared between Windows and macOS holding 8 GB files","exFAT"],["Legacy device that only supports maximum compatibility, files under 4 GB","FAT32"],["Default for modern Macs","APFS"],["Default for most Linux distributions","ext4"]],extra:["HFS+","CDFS"]},
+ {type:"order",title:"Clean Install of Windows",prompt:"Place the steps for a clean OS installation in the correct order (first step at the top).",steps:[
+  "Verify hardware requirements and back up user data","Set the boot order and boot from the installation media","Choose a custom install and create/select the partition (GPT for UEFI)","Complete the install and out-of-box experience (account, region, network)","Install drivers and run Windows Update","Restore user data and reinstall applications"]},
+ {type:"mcq",title:"Partitioning",q:"A technician is preparing a 4 TB drive for a Windows 11 system that boots in UEFI mode. Which partition style should be used?",ok:"GPT",w:["MBR","Extended partition","Dynamic disk only"],why:"GPT supports drives larger than 2 TB and is required for UEFI boot. MBR is limited to 2 TB."},
+ {type:"mcq",title:"Network Environments",q:"A company with 200 PCs needs centralized authentication and policy management. What should the technician implement?",ok:"Join the PCs to an Active Directory domain",w:["Create a workgroup on each PC","Set every PC's network profile to Private","Enable Remote Desktop on all PCs"],why:"Domains provide centralized accounts and Group Policy; workgroups are decentralized."},
+ {type:"mcq",title:"OS Installations",q:"A user wants to move from Windows 10 to Windows 11 while keeping apps, settings, and files. Which installation type is correct?",ok:"In-place upgrade",w:["Clean install","Reset this PC and remove everything","Image deployment that wipes the disk"],why:"An in-place upgrade preserves apps and data; a clean install or wipe does not."},
+ {type:"mcq",title:"Network Profiles",q:"A salesperson connects a laptop to airport Wi-Fi. Which Windows network profile should be applied?",ok:"Public",w:["Private","Domain","Home"],why:"Public networks apply the most restrictive settings such as network discovery off."}
+ ]}
+];
+
+let cur=0,S={};
+const L=()=>labs[cur],key=i=>cur+"_"+i;
+function init(t){
+  if(t.type==="term")return{idx:0,m:0,misses:0,log:[],done:false};
+  if(t.type==="match"){return{sel:{},res:null,misses:0,done:false,opts:shuf(t.rows.map(r=>r[1]).concat(t.extra||[]))}}
+  if(t.type==="order"){let o;do{o=shuf(t.steps.map((_,i)=>i))}while(o.every((v,i)=>v===i));return{order:o,misses:0,done:false,msg:""}}
+  if(t.type==="perm")return{bits:Array(9).fill(0),misses:0,done:false,msg:""};
+  return{order:shuf([0,1,2,3]),picked:null,misses:0,done:false};
+}
+const st=i=>S[key(i)]||(S[key(i)]=init(L().tasks[i]));
+const pts=(s)=>s.done?Math.max(.4,1-.15*s.misses):0;
+const octal=b=>[0,3,6].map(k=>b[k]*4+b[k+1]*2+b[k+2]).join("");
+
+function body(t,s,i){
+  if(t.type==="term"){
+    const it=t.items[s.idx];
+    return `<p>${esc(t.prompt)}</p><div class="term">${s.log.map(l=>`<div class="${l.c}">${esc(l.t)}</div>`).join("")||"<div class='o'>Terminal ready. Type a command and press Enter.</div>"}</div>`+
+    (s.done?`<div class="ok">All objectives complete.</div>`:`<div class="term-row"><span>${esc(t.ps)}</span><input class="tin" data-i="${i}" autocomplete="off" spellcheck="false" aria-label="Command input"></div><div class="task-q"><b>Objective ${s.idx+1} of ${t.items.length}:</b> ${esc(it[0])}</div>${s.m>=2?`<div class="hint">Hint: ${esc(it[3])}</div>`:""}`);
+  }
+  if(t.type==="match"){
+    return `<p>${esc(t.prompt)}</p><table>${t.rows.map((r,k)=>{const v=s.sel[k]||"",cls=s.res?(s.res[k]?"y":"n"):"";
+      return `<tr><td>${esc(r[0])}</td><td style="width:44%"><select class="${cls}" data-i="${i}" data-k="${k}" ${s.done?"disabled":""}><option value="">Select…</option>${s.opts.map(o=>`<option ${o===v?"selected":""}>${esc(o)}</option>`).join("")}</select></td><td class="m ${cls}">${s.res?(s.res[k]?"✓":"✗"):""}</td></tr>`}).join("")}</table>`+
+      (s.done?`<div class="ok">All matches correct.</div>`:`<div class="foot"><button class="btn" data-act="chk" data-i="${i}">Check Answers</button></div>`)+(s.res&&!s.done?`<div class="bad">${s.res.filter(Boolean).length} of ${t.rows.length} correct. Fix the marked rows and check again.</div>`:"");
+  }
+  if(t.type==="order"){
+    return `<p>${esc(t.prompt)}</p><ol class="ord">${s.order.map((v,k)=>`<li><span>${esc(t.steps[v])}</span>${s.done?"":`<button data-act="up" data-i="${i}" data-k="${k}" aria-label="Move up">↑</button><button data-act="dn" data-i="${i}" data-k="${k}" aria-label="Move down">↓</button>`}</li>`).join("")}</ol>`+
+      (s.done?`<div class="ok">Correct order.</div>`:`<div class="foot"><button class="btn" data-act="chk" data-i="${i}">Check Order</button></div>`)+(s.msg&&!s.done?`<div class="bad">${esc(s.msg)}</div>`:"");
+  }
+  if(t.type==="perm"){
+    const rows=["Owner (user)","Group","Others"],cols=["r","w","x"];
+    return `<p>${esc(t.prompt)}</p><div class="perm"><span></span>${cols.map(c=>`<b>${c==="r"?"Read":c==="w"?"Write":"Execute"}</b>`).join("")}${rows.map((r,a)=>`<label>${r}</label>${cols.map((c,b)=>`<input type="checkbox" data-i="${i}" data-bit="${a*3+b}" ${s.bits[a*3+b]?"checked":""} ${s.done?"disabled":""} aria-label="${r} ${c}">`).join("")}`).join("")}</div><span class="num">chmod ${octal(s.bits)} ${esc(t.file)}</span>`+
+      (s.done?`<div class="ok">Correct: ${t.target}.</div>`:`<div class="foot"><button class="btn" data-act="chk" data-i="${i}">Check Permissions</button></div>`)+(s.msg&&!s.done?`<div class="bad">${esc(s.msg)}</div>`:"");
+  }
+  const ch=[t.ok].concat(t.w);
+  return `<p>${esc(t.q)}</p><div class="opts">${s.order.map(j=>{let cls="";if(s.picked===j)cls=j===0?"y":"n";return `<button class="opt ${cls}" data-act="pick" data-i="${i}" data-j="${j}" ${s.done?"disabled":""}>${esc(ch[j])}</button>`}).join("")}</div>`+
+    (s.done?`<div class="ok">Correct. ${esc(t.why)}</div>`:s.picked!==null?`<div class="bad">Not quite. Re-read the scenario and choose the best answer.</div>`:"");
+}
+function draw(i,focus){
+  const t=L().tasks[i],s=st(i),el=$("#c"+i);
+  el.className="card"+(s.done?" done":"");
+  el.innerHTML=`<div class="tag">${t.type==="term"?"Simulation":t.type==="mcq"?"Multiple choice":"Performance-based"} · Task ${i+1}</div><h2>${esc(t.title)}</h2>`+body(t,s,i);
+  const tm=el.querySelector(".term");if(tm)tm.scrollTop=tm.scrollHeight;
+  if(focus){const inp=el.querySelector(".tin");if(inp)inp.focus({preventScroll:true})}
+  meter();
+}
+function meter(){
+  const T=L().tasks,n=T.filter((_,i)=>st(i).done).length;
+  $("#completed").textContent=n+" / "+T.length+" tasks complete";$("#pbar").style.width=(n/T.length*100)+"%";
+}
+function renderLab(){
+  $("#tabs").innerHTML=labs.map((l,k)=>`<button class="tab ${k===cur?"on":""}" data-lab="${k}">${esc(l.name)}</button>`).join("");
+  $("#intro").textContent=L().intro;$("#report").innerHTML="";
+  $("#tasks").innerHTML=L().tasks.map((_,i)=>`<div class="card" id="c${i}"></div>`).join("");
+  L().tasks.forEach((_,i)=>draw(i));
+}
+function check(i){
+  const t=L().tasks[i],s=st(i);
+  if(t.type==="match"){
+    s.res=t.rows.map((r,k)=>s.sel[k]===r[1]);
+    if(s.res.every(Boolean))s.done=true;else s.misses++;
+  }else if(t.type==="order"){
+    const ok=s.order.filter((v,k)=>v===k).length;
+    if(ok===t.steps.length)s.done=true;else{s.misses++;s.msg=ok+" of "+t.steps.length+" steps are in the correct position. Think about what must exist before the next step can happen."}
+  }else if(t.type==="perm"){
+    if(octal(s.bits)===t.target)s.done=true;else{s.misses++;s.msg="Current value is "+octal(s.bits)+". Re-read who needs which access: owner, group, and others."}
+  }
+  draw(i);
+}
+function runTerm(i,val){
+  const t=L().tasks[i],s=st(i),it=t.items[s.idx],cmd=val.trim().replace(/\s+/g," ");
+  if(!cmd)return;
+  s.log.push({c:"c",t:t.ps+" "+cmd});
+  if(new RegExp(it[1],t.ci?"i":"").test(cmd)){
+    if(it[2])s.log.push({c:"o",t:it[2]});
+    s.idx++;s.m=0;if(s.idx>=t.items.length)s.done=true;
+  }else{
+    s.m++;s.misses++;s.log.push({c:"e",t:"The command did not accomplish the objective. Re-read the task."});
+  }
+  draw(i,true);
+}
+function report(){
+  const T=L().tasks,sc=T.map((_,i)=>pts(st(i))),pct=Math.round(sc.reduce((a,b)=>a+b,0)/T.length*100);
+  const key=t=>t.type==="term"?"<ul>"+t.items.map(x=>`<li><code>${esc(x[4])}</code> — ${esc(x[0])}</li>`).join("")+"</ul>"
+   :t.type==="match"?"<ul>"+t.rows.map(r=>`<li>${esc(r[0])} → <b>${esc(r[1])}</b></li>`).join("")+"</ul>"
+   :t.type==="order"?"<ol>"+t.steps.map(x=>`<li>${esc(x)}</li>`).join("")+"</ol>"
+   :t.type==="perm"?`<ul><li><b>${t.target}</b> — ${esc(t.why)}</li></ul>`
+   :`<ul><li><b>${esc(t.ok)}</b> — ${esc(t.why)}</li></ul>`;
+  const lvl=pct>=85?"Exam ready on these objectives":pct>=70?"Solid — review the missed items":"Keep practicing these objectives";
+  $("#report").innerHTML=`<div class="report"><div class="eyebrow" style="color:#1769aa;opacity:1">${esc(L().name)}</div><h2>Lab Report</h2><div class="big">${pct}%</div><p>${lvl}. ${T.filter((_,i)=>st(i).done).length} of ${T.length} tasks completed. Points are reduced for each incorrect attempt, and incomplete tasks score zero.</p>`+
+   T.map((t,i)=>`<details><summary>${i+1}. ${esc(t.title)} — ${st(i).done?Math.round(sc[i]*100)+"%":"Not completed"} (${st(i).misses} incorrect attempt${st(i).misses===1?"":"s"})</summary>${key(t)}</details>`).join("")+`</div>`;
+  $("#report").scrollIntoView({behavior:"smooth"});
+}
+
+document.addEventListener("click",e=>{
+  const tb=e.target.closest("[data-lab]");if(tb){cur=Number(tb.dataset.lab);renderLab();return}
+  const b=e.target.closest("[data-act]");if(!b)return;
+  const i=Number(b.dataset.i),s=st(i),t=L().tasks[i],a=b.dataset.act;
+  if(a==="chk")check(i);
+  else if(a==="up"||a==="dn"){const k=Number(b.dataset.k),d=a==="up"?-1:1;if(k+d>=0&&k+d<s.order.length){[s.order[k],s.order[k+d]]=[s.order[k+d],s.order[k]];s.msg="";draw(i)}}
+  else if(a==="pick"){const j=Number(b.dataset.j);s.picked=j;if(j===0)s.done=true;else s.misses++;draw(i)}
+});
+document.addEventListener("change",e=>{
+  const el=e.target;if(el.dataset.i===undefined)return;
+  const s=st(Number(el.dataset.i));
+  if(el.tagName==="SELECT"){s.sel[el.dataset.k]=el.value;s.res=null;draw(Number(el.dataset.i))}
+  else if(el.dataset.bit!==undefined){s.bits[Number(el.dataset.bit)]=el.checked?1:0;s.msg="";draw(Number(el.dataset.i))}
+});
+document.addEventListener("keydown",e=>{
+  if(e.key==="Enter"&&e.target.classList.contains("tin")){const v=e.target.value;runTerm(Number(e.target.dataset.i),v)}
+});
+$("#submitLab").addEventListener("click",report);
+$("#resetLab").addEventListener("click",()=>{Object.keys(S).forEach(k=>{if(k.startsWith(cur+"_"))delete S[k]});renderLab()});
+renderLab();
+})();
+</script>
+</body>
+</html>
